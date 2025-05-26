@@ -14,11 +14,75 @@ public class Person {
     public boolean addPerson() {
         //TODO: This method adds information about a person to a TXT file.
         //Condition 1: PersonID should be exactly 10 characters long;
+    	if (personID == null || personID.length() != 10) {
+    		return false;
+    	}
         //the first two characters should be numbers between 2 and 9, there should be at least two special characters between characters 3 and 8,
+    	boolean dig1 = Character.isDigit(personID[0]);
+    	boolean dig2 = Character.isDigit(personID[1]);
+    	
+    	if (dig1 == false || dig2 == false) {
+    		return false;
+    	}
+    	
+    	if (dig1 == true) {
+    		if (personID[0] < '2' || personID[0] > '9' || 
+    				personID[1] < '2' || personID[1] > '9') {
+    			return false;
+    		}
+    	}
+    	
+    	if (dig2 == true) {
+    		if () {
+    			return false;
+    		}
+    	}
+    	
+    	int count;
+    	
+    	for (int i = 2; i <= 9; ++i) {
+    		if (Character.isDigit(personID[i]) == false && Character.isLetter(personID[i]) == false) {
+    			count += 1;
+    		}
+    	}
+    	
+    	if (count < 2) {
+    		return false;
+    	}
         //and the last two characters should be upper case letters (A – Z). Example: "56s_d%fAB"
+    	boolean let1 = Character.isLetter(personID[8]);
+    	boolean let2 = Character.isLetter(personID[9]);
+    	
+    	if (let1 == false || let2 == false) {
+    		return false;
+    	}
+    	
+    	if (let1 == true) {
+    		if (Character.isLowerCase(personID[8])) {
+    			return false;
+    		}
+    	}
+    	
+    	if (let2 == true) {
+    		if (Character.isLowerCase(personID[9])) {
+    			return false;
+    		}
+    	}
         //Condition 2: The address of the Person should follow the following format: Street Number|Street|City|State|Country.
         //The State should be only Victoria. Example: 32|Highland Street|Melbourne|Victoria|Australia.
+    	
+    	String[] addressInParts = address.split("\\|");
+    	
+    	if (addressInParts[3] != "Victoria") {
+    		return false;
+    	}
         //Condition 3: The format of the birth date of the person should follow the following format: DD-MM-YYYY. Example: 15-11-1990
+    	
+    	String[] birthDateInParts = birthdate.split("-");
+    	
+    	String date = birthdate.substr(0,2);
+    	String
+    	int date = Character.isNumeric
         //Instruction: If the Person's information meets the above conditions and any other conditions you may want to consider,
         //the information should be inserted into a TXT file, and the addPerson function should return true.
         //Otherwise, the information should not be inserted into the TXT file, and the addPerson function should return false.
