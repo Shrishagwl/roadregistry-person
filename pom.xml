@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>au.edu.rmit.sct</groupId> <!-- Convention is the reverse domain name -->
-    <artifactId>roadregistry-person</artifactId>roadregistry-person> <!-- Name of the project -->
+    <artifactId>numbers</artifactId> <!-- Name of the project -->
     <version>0.1.0-SNAPSHOT</version> <!-- Version of the project -->
 
     <properties>
         <!-- Java version -->
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
         <junit.version>5.12.2</junit.version>
     </properties>
 
@@ -19,13 +19,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
+            <version>5.9.2</version>
             <scope>test</scope> <!-- Test scope means it is only used for testing -->
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
+            <version>5.9.2</version>
             <scope>test</scope> <!-- Test scope means it is only used for testing -->
         </dependency>
     </dependencies>
