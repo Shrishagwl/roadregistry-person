@@ -27,7 +27,7 @@ public class Person {
         this.isSuspended = isSuspended;
     }
 
-    public boolean addPerson(String personID,String address, String birthdate) {
+    public boolean addPerson() {
         if (personID == null || personID.length() != 10) {
             System.out.println("Person ID must be exactly 10 characters long.");
             return false;
@@ -68,17 +68,20 @@ public class Person {
             return false;
         }
 
-        if (birthdate.length() != 10) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String bd = birthdate.format(formatter);
+
+        if (bd.length() != 10) {
             return false;
         }
 
-        if (birthdate.charAt(2) != '-' || birthdate.charAt(5) != '-') {
+        if (bd.charAt(2) != '-' || bd.charAt(5) != '-') {
             return false;
         }
 
-        String day = birthdate.substring(0, 2);
-        String month = birthdate.substring(3, 5);
-        String year = birthdate.substring(6,10);
+        String day = bd.substring(0, 2);
+        String month = bd.substring(3, 5);
+        String year = bd.substring(6,10);
 
         for (int i = 0; i < day.length(); ++i) {
             if (!Character.isDigit(day.charAt(i))) {
