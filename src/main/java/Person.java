@@ -77,8 +77,8 @@ public class Person {
             this.address = newAddress;
             this.birthdate = parseDate(newBirthdate);
             
-            //updatefile funtion
-            
+            writeToFile();
+
             return "Success";
         } catch (Exception e) {
             return e.getMessage();

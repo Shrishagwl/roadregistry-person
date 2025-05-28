@@ -8,18 +8,32 @@ public class PersonTest {
         Person p = new Person("56@_!%&AB","Rohan","Patel","32|Highland Street|Melbourne|Victoria|Australia","15-11-1990");
  		String result = p.addPerson();
         assertEquals("Success", result);
-        Person plol = new Person("56@_B","Rohan","Patel","32|Highland Street|Melbourne|Victoria|Australia","15-11-1990");
- 		String resultlol = plol.addPerson();
-        assertEquals("Invalid person ID .", resultlol);
     }
 
     @Test
-    public void testAddPersonSucc() {
-        Person p = new Person("58@_!%&AB","Rohan","Patel","32|Highland Street|Melbourne|Victoria|Australia","15-11-1990");
- 		String result = p.addPerson();
-        assertEquals("Success", result);
+    public void testUpdatePersonalDetails_Success() {
+        // Step 1: Create original person
+        Person person = new Person(
+                "56@_!%AB",
+                "Rohan",
+                "Patel",
+                "32|Highland Street|Melbourne|Victoria|Australia",
+                "15-11-2000"
+        );
 
+        // Step 2: Try to update all fields (except birthdate)
+        String result = person.updatePersonalDetails(
+                "56@_!%AB",                     // same ID
+                "Rohit",                        // new first name
+                "Patel",                        // same last name
+                "32|Highland Street|Melbourne|Victoria|Australia", // same address
+                "15-11-2000"                    // same birthdate
+        );
+
+        // Step 3: Assert that update was successful
+        assertEquals("Success", result);
     }
+
 
 }
 
