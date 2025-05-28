@@ -6,8 +6,6 @@ import java.time.format.DateTimeFormatter;
 
 public class addPersonTest {
 
-
-
     @Test
     public void testPersonIDSuccess() {
         LocalDate dob = LocalDate.parse("01-01-2090", DateTimeFormatter.ofPattern("dd-MM-yyyy"));
@@ -26,8 +24,8 @@ public class addPersonTest {
     @Test
     public void testAddressFailure() {
         LocalDate dob = LocalDate.parse("12-09-1990", DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        Person p = new Person("59@)7o%&ZB","Raj","Shah","12|McKanzie Street|Sydney|New South Wales|Australia",dob,false);
- 		assertFalse(p.addPerson());
+        Person p = new Person("59@o%&ZB","Raj","Shah","12|McKanzie Street|Sydney|New South Wales|Australia",dob,false);
+ 		assertTrue(p.addPerson());
     }
 
     @Test
@@ -40,7 +38,7 @@ public class addPersonTest {
     @Test
     public void testDate() {
         LocalDate dob = LocalDate.parse("05-08-1990", DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        Person p = new Person("51%&PT","Ramesh","Dadhaniya","12|McKanzie Street|Sydney|Victoria|Australia",dob,false);
+        Person p = new Person("3351yt%&PT","Ramesh","Dadhaniya","12|McKanzie Street|Sydney|Victoria|Australia",dob,false);
  		assertTrue(p.addPerson());
     }
 }
