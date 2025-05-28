@@ -1,28 +1,24 @@
-import java.util.HashMap;
-import java.util.Date;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.Period;
+import java.io.*;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 public class Person {
-
     private String personID;
     private String firstName;
     private String lastName;
     private String address;
-    private String birthdate;
-    private HashMap<Date, Integer> demeritPoints = new HashMap<>(); // A variable that holds the demerit points with the offense day
-//    private ArrayList<Offense> demeritRecords = new ArrayList<>();
+    private LocalDate birthdate;
+    private Map<LocalDate, Integer> demeritPoints = new HashMap<>();
     private boolean isSuspended;
-    
-public Person() {}
 
-    public Person(String personID, String firstName, String lastName, String address, String birthdate, boolean isSuspended) {
+
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+    public Person() {}
+
+    public Person(String personID, String firstName, String lastName, String address, LocalDate birthdate, boolean isSuspended) {
         this.personID = personID;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -32,59 +28,51 @@ public Person() {}
     }
 
     public boolean addPerson(String personID,String address, String birthdate) {
-        //TODO: This method adds information about a person to a TXT file.
-        //Condition 1: PersonID should be exactly 10 characters long;
-    	if (personID == null || personID.length() != 10) {
+        if (personID == null || personID.length() != 10) {
             System.out.println("Person ID must be exactly 10 characters long.");
-    		return false;
-    	}
-        //the first two characters should be numbers between 2 and 9, there should be at least two special characters between characters 3 and 8,
-    	
-    	if (!Character.isDigit(personID.charAt(0)) || !Character.isDigit(personID.charAt(1))) {
-    		System.out.println("First two characters of Person ID must be digits between 2 and 9.");
             return false;
-    	}
-    	
-		if (personID.charAt(0) < '2' || personID.charAt(0) > '9' || 
-				personID.charAt(1) < '2' || personID.charAt(1) > '9') {
+        }
+
+        if (!Character.isDigit(personID.charAt(0)) || !Character.isDigit(personID.charAt(1))) {
             System.out.println("First two characters of Person ID must be digits between 2 and 9.");
-			return false;
-		}
-    	
-    	int count = 0;
-    	
-    	for (int i = 2; i <= 9; ++i) {
-    		if (Character.isDigit(personID.charAt(i)) == false && Character.isLetter(personID.charAt(i)) == false) {
-    			count += 1;
-    		}
-    	}
-    	
-    	if (count < 2) {
+            return false;
+        }
+
+        if (personID.charAt(0) < '2' || personID.charAt(0) > '9' ||
+            personID.charAt(1) < '2' || personID.charAt(1) > '9') {
+            System.out.println("First two characters of Person ID must be digits between 2 and 9.");
+            return false;
+        }
+
+        int count = 0;
+
+        for (int i = 2; i <= 9; ++i) {
+            if (Character.isDigit(personID.charAt(i)) == false && Character.isLetter(personID.charAt(i)) == false) {
+                count += 1;
+            }
+        }
+
+        if (count < 2) {
             System.out.println("There should be at least two special characters");
             return false;
-    	}
-        //and the last two characters should be upper case letters (A – Z). Example: "56s_d%fAB"
-    	
-    	if (!Character.isUpperCase(personID.charAt(8)) || !Character.isUpperCase(personID.charAt(9))) {
-    		System.out.println("Last two characters of Person ID must be upper case letters.");
-    		return false;
-    	}
+        }
 
-        //Condition 2: The address of the Person should follow the following format: Street Number|Street|City|State|Country.
-        //The State should be only Victoria. Example: 32|Highland Street|Melbourne|Victoria|Australia.
-    	
-    	String[] addressInParts = address.split("\\|");
-    	
-    	if (addressInParts.length != 5 || !addressInParts[3].equals("Victoria")) {
-    		return false;
-    	}
-        //Condition 3: The format of the birth date of the person should follow the following format: DD-MM-YYYY. Example: 15-11-1990
+        if (!Character.isUpperCase(personID.charAt(8)) || !Character.isUpperCase(personID.charAt(9))) {
+            System.out.println("Last two characters of Person ID must be upper case letters.");
+            return false;
+        }
+
+        String[] addressInParts = address.split("\\|");
+
+        if (addressInParts.length != 5 || !addressInParts[3].equals("Victoria")) {
+            return false;
+        }
 
         if (birthdate.length() != 10) {
             return false;
-        } 
+        }
 
-    	if (birthdate.charAt(2) != '-' || birthdate.charAt(5) != '-') {
+        if (birthdate.charAt(2) != '-' || birthdate.charAt(5) != '-') {
             return false;
         }
 
@@ -118,10 +106,8 @@ public Person() {}
         if (y % 1000 == 0) {
             if (y % 400 == 0) {
                 isLeap = true;
-            } 
-        }
-
-        else {
+            }
+        } else {
             if (y % 4 == 0) {
                 isLeap = true;
             }
@@ -132,8 +118,7 @@ public Person() {}
                 if (d < 1 || d > 29) {
                     return false;
                 }
-            }
-            else {
+            } else {
                 if (d < 1 || d > 28) {
                     return false;
                 }
@@ -152,58 +137,97 @@ public Person() {}
             }
         }
 
-    	try {
+        try {
             FileWriter fw = new FileWriter("try.txt", true);
             fw.write(personID + "," + firstName + "," + lastName + "," + address + "," + birthdate + "\n");
             fw.close();
             return true;
-    	} catch (IOException e) {
-    		System.out.println("File Error: " + e.getMessage());
-    		return false;
-    	}
-        
+        } catch (IOException e) {
+            System.out.println("File Error: " + e.getMessage());
+            return false;
+        }
     }
 
     public int calculateAge(String birthdate) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            LocalDate birthDate = LocalDate.parse(birthdate, formatter);
-            LocalDate today = LocalDate.now();
-            return Period.between(birthDate, today).getYears();
-        }
-
-    public boolean updatePersonalDetails() {
-
-        
-        //TODO: This method allows updating a given person's ID, firstName, lastName, address and birthday in a TXT file.
-        //Changing personal details will not affect their demerit points or the suspension status.
-        //All relevant conditions discussed for the addPerson function also need to be considered and checked in the updatePerson function.
-        //Condition 1: If a person is under 18, their address cannot be changed.
-        int age = calculateAge(birthdate);
-
-        if (age < 18) {
-            System.out.println("Adress cannot be changed");
-            return false;
-        }
-        //Condition 2: If a person's birthday is going to be changed, then no other personal detail (i.e. person's ID, firstName, lastName, address) can be changed.
-        //Condition 3: If the first character/digit of a person's ID is an even number, then their ID cannot be changed.
-        if (personID.charAt(0) % 2 == 0) {
-            System.out.println("ID cannot be changed");
-            return false;
-        }
-        //Instruction: If the Person's updated information meets the above conditions and any other conditions you may want to consider,
-        //the Person's information should be updated in the TXT file with the updated information, and the updatePersonalDetails function should return true.
-        //Otherwise, the Person's updated information should not be updated in the TXT file, and the updatePersonalDetails function should return false.
-        return true;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate birthDate = LocalDate.parse(birthdate, formatter);
+        LocalDate today = LocalDate.now();
+        return Period.between(birthDate, today).getYears();
     }
 
-    public String addDemeritPoints() {
-        //TODO: This method adds demerit points for a given person in a TXT file.
-        //Condition 1: The format of the date of the offense should follow the following format: DD-MM-YYYY. Example: 15-11-1990
-        //Condition 2: The demerit points must be a whole number between 1–6
-        //Condition 3: If the person is under 21, the isSuspended variable should be set to true if the total demerit points within two years exceed 6.
-        //If the person is over 21, the isSuspended variable should be set to true if the total demerit points within two years exceed 12.
-        //Instruction: If the above conditions and any other conditions you may want to consider are met, the demerit points for a person should be inserted into the TXT file,
-        //and the addDemeritPoints function should return "Success". Otherwise, the addDemeritPoints function should return "Failed".
-        return "Success";
+    public String updatePersonalDetails(String newPersonID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
+        try {
+            int age = Period.between(this.birthdate, LocalDate.now()).getYears();
+            boolean isBirthdateChanged = newBirthdate != null && !newBirthdate.equals(DATE_FORMAT.format(this.birthdate));
+
+            if (isBirthdateChanged) {
+                if (!newPersonID.equals(this.personID) || !newFirstName.equalsIgnoreCase(this.firstName) || !newLastName.equalsIgnoreCase(this.lastName) || !newAddress.equals(this.address)) {
+                    return "If birthdate changes, no other details can be updated.";
+                }
+            }
+
+            if (age < 18 && !newAddress.equals(this.address)) {
+                return "Under 18s cannot change address.";
+            }
+
+            if (Character.getNumericValue(this.personID.charAt(0)) % 2 == 0 && !newPersonID.equals(this.personID)) {
+                return "Cannot change ID if it starts with an even digit.";
+            }
+
+            this.personID = newPersonID;
+            this.firstName = newFirstName;
+            this.lastName = newLastName;
+            this.address = newAddress;
+            this.birthdate = parseDate(newBirthdate);
+
+            return "Success";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    public String addDemeritPoints(String dateStr, int points) {
+        try {
+            LocalDate date = parseDate(dateStr);
+            if (points < 1 || points > 6) {
+                return "Demerit points must be between 1 and 6.";
+            }
+
+            demeritPoints.put(date, points);
+            int age = Period.between(this.birthdate, LocalDate.now()).getYears();
+            LocalDate twoYearsAgo = LocalDate.now().minusYears(2);
+            int totalPoints = demeritPoints.entrySet().stream()
+                    .filter(e -> !e.getKey().isBefore(twoYearsAgo))
+                    .mapToInt(Map.Entry::getValue)
+                    .sum();
+
+            boolean currentSuspensionStatus = (age < 21 && totalPoints > 6) || (age >= 21 && totalPoints > 12);
+            if (currentSuspensionStatus != isSuspended) {
+                isSuspended = currentSuspensionStatus;
+            }
+
+            writeDemeritToFile(date, points);
+            return "Success";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+
+    private LocalDate parseDate(String input) throws Exception {
+        try {
+            return LocalDate.parse(input, DATE_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new Exception("Invalid date format. Use DD-MM-YYYY.");
+        }
+    }
+
+    private void writeDemeritToFile(LocalDate date, int points) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("demerits.txt", true))) {
+            writer.write(String.join("|", personID, DATE_FORMAT.format(date), String.valueOf(points)));
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Error writing demerit: " + e.getMessage());
+        }
     }
 }
