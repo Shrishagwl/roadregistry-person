@@ -2,6 +2,12 @@ import java.util.HashMap;
 import java.util.Date;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Person {
 
@@ -14,6 +20,7 @@ public class Person {
 //    private ArrayList<Offense> demeritRecords = new ArrayList<>();
     private boolean isSuspended;
     
+public Person() {}
 
     public Person(String personID, String firstName, String lastName, String address, String birthdate, boolean isSuspended) {
         this.personID = personID;
@@ -24,7 +31,7 @@ public class Person {
         this.isSuspended = isSuspended;
     }
 
-    public boolean addPerson() {
+    public boolean addPerson(String personID,String address, String birthdate) {
         //TODO: This method adds information about a person to a TXT file.
         //Condition 1: PersonID should be exactly 10 characters long;
     	if (personID == null || personID.length() != 10) {
@@ -68,15 +75,83 @@ public class Person {
     	
     	String[] addressInParts = address.split("\\|");
     	
-    	if (addressInParts.length != 5 && addressInParts[3] != "Victoria") {
+    	if (addressInParts.length != 5 || !addressInParts[3].equals("Victoria")) {
     		return false;
     	}
         //Condition 3: The format of the birth date of the person should follow the following format: DD-MM-YYYY. Example: 15-11-1990
 
+        if (birthdate.length() != 10) {
+            return false;
+        } 
+
     	if (birthdate.charAt(2) != '-' || birthdate.charAt(5) != '-') {
             return false;
         }
-    	
+
+        String day = birthdate.substring(0, 2);
+        String month = birthdate.substring(3, 5);
+        String year = birthdate.substring(6,10);
+
+        for (int i = 0; i < day.length(); ++i) {
+            if (!Character.isDigit(day.charAt(i))) {
+                return false;
+            }
+        }
+
+        for (int i = 0; i < month.length(); ++i) {
+            if (!Character.isDigit(month.charAt(i))) {
+                return false;
+            }
+        }
+
+        for (int i = 0; i < year.length(); ++i) {
+            if (!Character.isDigit(year.charAt(i))) {
+                return false;
+            }
+        }
+
+        int d = Integer.valueOf(day);
+        int m = Integer.valueOf(month);
+        int y = Integer.valueOf(year);
+        boolean isLeap = false;
+
+        if (y % 1000 == 0) {
+            if (y % 400 == 0) {
+                isLeap = true;
+            } 
+        }
+
+        else {
+            if (y % 4 == 0) {
+                isLeap = true;
+            }
+        }
+
+        if (m == 2) {
+            if (isLeap) {
+                if (d < 1 || d > 29) {
+                    return false;
+                }
+            }
+            else {
+                if (d < 1 || d > 28) {
+                    return false;
+                }
+            }
+        }
+
+        if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12) {
+            if (d < 1 || d > 31) {
+                return false;
+            }
+        }
+
+        if (m == 2 || m == 4 || m == 6 || m == 9 || m == 11) {
+            if (d < 1 || d > 30) {
+                return false;
+            }
+        }
+
     	try {
             FileWriter fw = new FileWriter("try.txt", true);
             fw.write(personID + "," + firstName + "," + lastName + "," + address + "," + birthdate + "\n");
@@ -89,13 +164,32 @@ public class Person {
         
     }
 
+    public int calculateAge(String birthdate) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate birthDate = LocalDate.parse(birthdate, formatter);
+            LocalDate today = LocalDate.now();
+            return Period.between(birthDate, today).getYears();
+        }
+
     public boolean updatePersonalDetails() {
+
+        
         //TODO: This method allows updating a given person's ID, firstName, lastName, address and birthday in a TXT file.
         //Changing personal details will not affect their demerit points or the suspension status.
         //All relevant conditions discussed for the addPerson function also need to be considered and checked in the updatePerson function.
         //Condition 1: If a person is under 18, their address cannot be changed.
+        int age = calculateAge(birthdate);
+
+        if (age < 18) {
+            System.out.println("Adress cannot be changed");
+            return false;
+        }
         //Condition 2: If a person's birthday is going to be changed, then no other personal detail (i.e. person's ID, firstName, lastName, address) can be changed.
         //Condition 3: If the first character/digit of a person's ID is an even number, then their ID cannot be changed.
+        if (personID.charAt(0) % 2 == 0) {
+            System.out.println("ID cannot be changed");
+            return false;
+        }
         //Instruction: If the Person's updated information meets the above conditions and any other conditions you may want to consider,
         //the Person's information should be updated in the TXT file with the updated information, and the updatePersonalDetails function should return true.
         //Otherwise, the Person's updated information should not be updated in the TXT file, and the updatePersonalDetails function should return false.
