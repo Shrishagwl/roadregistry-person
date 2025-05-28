@@ -19,7 +19,7 @@ public class addPersonTest {
     public void testPersonIDFailure() {
         LocalDate dob = LocalDate.parse("05-03-2000", DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         Person p = new Person("12345678","Ram","Lakhan","3|Lonsdale Street|Melbourne|Victoria|Australia",dob,false);
- 		assertTrue(p.addPerson());
+ 		assertFalse(p.addPerson());
 
     }
 
