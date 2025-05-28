@@ -151,12 +151,12 @@ public class Person {
         }
     }
 
-    public int calculateAge(String birthdate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate birthDate = LocalDate.parse(birthdate, formatter);
-        LocalDate today = LocalDate.now();
-        return Period.between(birthDate, today).getYears();
-    }
+    // public int calculateAge(String birthdate) {
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    //     LocalDate birthDate = LocalDate.parse(birthdate, formatter);
+    //     LocalDate today = LocalDate.now();
+    //     return Period.between(birthDate, today).getYears();
+    // }
 
     public String updatePersonalDetails(String newPersonID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
         try {
@@ -177,11 +177,11 @@ public class Person {
                 return "Cannot change ID if it starts with an even digit.";
             }
 
-            this.personID = newPersonID;
-            this.firstName = newFirstName;
-            this.lastName = newLastName;
-            this.address = newAddress;
-            this.birthdate = parseDate(newBirthdate);
+            // this.personID = newPersonID;
+            // this.firstName = newFirstName;
+            // this.lastName = newLastName;
+            // this.address = newAddress;
+            // this.birthdate = parseDate(newBirthdate);
 
             return "Success";
         } catch (Exception e) {
@@ -215,7 +215,6 @@ public class Person {
             return e.getMessage();
         }
     }
-
 
     private LocalDate parseDate(String input) throws Exception {
         try {

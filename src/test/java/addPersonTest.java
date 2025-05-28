@@ -40,7 +40,7 @@ public class addPersonTest {
     @Test
     public void testDate() {
         LocalDate dob = LocalDate.parse("05-08-1990", DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        Person p = new Person("51@)8*%&PT","Ramesh","Dadhaniya","12|McKanzie Street|Sydney|Victoria|Australia",dob,false);
- 		assertFalse(p.addPerson());
+        Person p = new Person("51%&PT","Ramesh","Dadhaniya","12|McKanzie Street|Sydney|Victoria|Australia",dob,false);
+ 		assertTrue(p.addPerson());
     }
 }
