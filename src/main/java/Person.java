@@ -18,12 +18,12 @@ public class Person {
 
     public Person() {}
 
-    public Person(String personID, String firstName, String lastName, String address, LocalDate birthdate, boolean isSuspended) {
+    public Person(String personID, String firstName, String lastName, String address, String birthdate, boolean isSuspended) {
         this.personID = personID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
-        this.birthdate = birthdate;
+        this.birthdate = LocalDate.parse(birthdate, DATE_FORMAT);
         this.isSuspended = isSuspended;
     }
 
