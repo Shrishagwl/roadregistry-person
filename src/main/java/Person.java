@@ -25,7 +25,11 @@ public class Person {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
-        this.birthdate = LocalDate.parse(birthdate, DATE_FORMAT);
+        try {
+            this.birthdate = parseDate(birthdate);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
         this.isSuspended = isSuspended;
     }
 
@@ -33,10 +37,14 @@ public class Person {
 
         boolean isPersonIDValid = validatePersonID(personID);
         boolean isAddressValid = validateAddress(address);
-        // boolean isIDUnique = validateUniqueID(personID);
+        boolean isIDUnique = validateUniqueID(personID);
 
         if (!isPersonIDValid) {
             return "Invalid Person ID, it does not fulfill the required conditions.";
+        }
+
+        if (!isIDUnique) {
+            return "Person ID already exists, please use a unique ID.";
         }
 
         if (!isAddressValid) {
@@ -59,6 +67,7 @@ public class Person {
 
     public String updatePersonalDetails(String newPersonID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
         try {
+            String oldId = this.personID;
             int age = Period.between(this.birthdate, LocalDate.now()).getYears();
             boolean isBirthdateChanged = newBirthdate != null && !newBirthdate.equals(DATE_FORMAT.format(this.birthdate));
 
@@ -76,12 +85,35 @@ public class Person {
                 return "Cannot change ID if it starts with an even digit.";
             }
 
-            // this.personID = newPersonID;
-            // this.firstName = newFirstName;
-            // this.lastName = newLastName;
-            // this.address = newAddress;
-            // this.birthdate = parseDate(newBirthdate);
+            if (!newPersonID.equals(this.personID)) {
+                validateUniqueID(newPersonID);
+            }
 
+            List<String> lines = Files.readAllLines(Paths.get(FILE_PATH));
+            boolean found = false;
+            for (int i = 0; i < lines.size(); i++) {
+                if (lines.get(i).startsWith(oldId + "|")) {
+                    String birthdateStr = isBirthdateChanged ? newBirthdate : DATE_FORMAT.format(this.birthdate);
+                    lines.set(i, String.join("|", newPersonID, newFirstName, newLastName, newAddress, birthdateStr, String.valueOf(isSuspended)));
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                return "Person not found.";
+            }
+
+            Files.write(Paths.get(FILE_PATH), lines);
+
+            this.personID = newPersonID;
+            this.firstName = newFirstName;
+            this.lastName = newLastName;
+            this.address = newAddress;
+            if (isBirthdateChanged) {
+                this.birthdate = parseDate(newBirthdate);
+            }
+            
             return "Success";
         } catch (Exception e) {
             return e.getMessage();
@@ -119,7 +151,7 @@ public class Person {
         try {
             return LocalDate.parse(input, DATE_FORMAT);
         } catch (DateTimeParseException e) {
-            throw new Exception("Invalid date format. Use DD-MM-YYYY.");
+            throw new Exception("Birthdate must be in DD-MM-YYYY format.");
         }
     }
 
@@ -175,19 +207,20 @@ public class Person {
         return true;
     }
  
-    private void validateUniqueID(String id) throws Exception{
+    private boolean validateUniqueID(String id){
         try {
             List<String> lines = Files.readAllLines(Paths.get(FILE_PATH));
             for (String line : lines) {
                 if (line.startsWith(id + "|")) {
-                    throw new Exception("Duplicate ID found: " + id);
+                    return false;
                 }
             }
         } catch (IOException e) {
-            throw new Exception("Error reading file: " + e.getMessage());
+            System.out.println("Error reading file: " + e.getMessage());
         }
+        return true;
     }
- 
+
     private boolean validateAddress(String address) {
 
         String[] addressInParts = address.split("\\|");
