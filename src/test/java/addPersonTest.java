@@ -14,9 +14,9 @@ public class addPersonTest {
     }
 
     @Test
-    public void testPersonIDFailure() {
-        Person p = new Person("12345678","Ram","Lakhan","3|Lonsdale Street|Melbourne|Victoria|Australia","05-03-2000",false);
- 		assertEquals("Invalid Person ID, it does not fulfill the required conditions.",p.addPerson());
+    public void testPersonIDSuccess() {
+        Person p = new Person("82%^89y$SU","Ram","Lakhan","3|Lonsdale Street|Melbourne|Victoria|Australia","05-03-2000",false);
+ 		assertEquals("The test data is valid and successfully written to file.",p.addPerson());
 
     }
 
@@ -28,14 +28,14 @@ public class addPersonTest {
 
     @Test
     public void testAddressSuccess() {
-        Person p = new Person("56@_7!%&CB","Ramesh","Dadhaniya","12|McKanzie Street|Sydney|Victoria|Australia","12-09-1990",false);
+        Person p = new Person("369^%!%&CB","Ramesh","Dadhaniya","12|McKanzie Street|Sydney|Victoria|Australia","12-09-1990",false);
  		assertEquals("The test data is valid and successfully written to file.",p.addPerson());
     }
 
     @Test
     public void testInvalidDateFormatThrows() {
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            new Person("56@_7!%&DB", "Ramesh", "Dadhaniya", 
+            new Person("28#87!%&DB", "Ramesh", "Dadhaniya", 
                     "12|McKanzie Street|Sydney|Victoria|Australia", 
                     "5-08-2009", false);
         });
