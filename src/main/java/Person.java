@@ -176,7 +176,7 @@ public class Person {
         }
 
         if (!Character.isDigit(personID.charAt(0)) || !Character.isDigit(personID.charAt(1))) {
-            System.out.println("First two characters of Person ID must be digits between 2 and 9.");
+            System.out.println("First two characters of Person ID must be digits.");
             return false;
         }
 
@@ -195,7 +195,7 @@ public class Person {
         }
 
         if (count < 2) {
-            System.out.println("There should be at least two special characters");
+            System.out.println("There should be at least two special characters.");
             return false;
         }
 
