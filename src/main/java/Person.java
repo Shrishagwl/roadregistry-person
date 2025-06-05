@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -12,8 +14,8 @@ public class Person {
     private LocalDate birthdate;
     private Map<LocalDate, Integer> demeritPoints = new HashMap<>();
     private boolean isSuspended;
-
-
+    
+    private static final String FILE_PATH = "people.txt";
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public Person() {}
@@ -27,136 +29,33 @@ public class Person {
         this.isSuspended = isSuspended;
     }
 
-    public boolean addPerson() {
-        if (personID == null || personID.length() != 10) {
-            System.out.println("Person ID must be exactly 10 characters long.");
-            return false;
+    public String addPerson() {
+
+        boolean isPersonIDValid = validatePersonID(personID);
+        boolean isAddressValid = validateAddress(address);
+        // boolean isIDUnique = validateUniqueID(personID);
+
+        if (!isPersonIDValid) {
+            return "Invalid Person ID, it does not fulfill the required conditions.";
         }
 
-        if (!Character.isDigit(personID.charAt(0)) || !Character.isDigit(personID.charAt(1))) {
-            System.out.println("First two characters of Person ID must be digits between 2 and 9.");
-            return false;
+        if (!isAddressValid) {
+            return "Invalid Address, it does not fulfill the required conditions.";
         }
 
-        if (personID.charAt(0) < '2' || personID.charAt(0) > '9' ||
-            personID.charAt(1) < '2' || personID.charAt(1) > '9') {
-            System.out.println("First two characters of Person ID must be digits between 2 and 9.");
-            return false;
+        if (calculateAge(birthdate) <= 0) {
+            System.out.println();
+            return "Age needs to be greater than zero!";
+        }
+        
+        if (calculateAge(birthdate) > 0 && calculateAge(birthdate) < 16) {
+            return "Age needs to be atleast 16 years for driving a car!";
         }
 
-        int count = 0;
+        writeToFile();
 
-        for (int i = 2; i <= 9; ++i) {
-            if (Character.isDigit(personID.charAt(i)) == false && Character.isLetter(personID.charAt(i)) == false) {
-                count += 1;
-            }
-        }
-
-        if (count < 2) {
-            System.out.println("There should be at least two special characters");
-            return false;
-        }
-
-        if (!Character.isUpperCase(personID.charAt(8)) || !Character.isUpperCase(personID.charAt(9))) {
-            System.out.println("Last two characters of Person ID must be upper case letters.");
-            return false;
-        }
-
-        String[] addressInParts = address.split("\\|");
-
-        if (addressInParts.length != 5 || !addressInParts[3].equals("Victoria")) {
-            return false;
-        }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String bd = birthdate.format(formatter);
-
-        if (bd.length() != 10) {
-            return false;
-        }
-
-        if (bd.charAt(2) != '-' || bd.charAt(5) != '-') {
-            return false;
-        }
-
-        String day = bd.substring(0, 2);
-        String month = bd.substring(3, 5);
-        String year = bd.substring(6,10);
-
-        for (int i = 0; i < day.length(); ++i) {
-            if (!Character.isDigit(day.charAt(i))) {
-                return false;
-            }
-        }
-
-        for (int i = 0; i < month.length(); ++i) {
-            if (!Character.isDigit(month.charAt(i))) {
-                return false;
-            }
-        }
-
-        for (int i = 0; i < year.length(); ++i) {
-            if (!Character.isDigit(year.charAt(i))) {
-                return false;
-            }
-        }
-
-        int d = Integer.valueOf(day);
-        int m = Integer.valueOf(month);
-        int y = Integer.valueOf(year);
-        boolean isLeap = false;
-
-        if (y % 1000 == 0) {
-            if (y % 400 == 0) {
-                isLeap = true;
-            }
-        } else {
-            if (y % 4 == 0) {
-                isLeap = true;
-            }
-        }
-
-        if (m == 2) {
-            if (isLeap) {
-                if (d < 1 || d > 29) {
-                    return false;
-                }
-            } else {
-                if (d < 1 || d > 28) {
-                    return false;
-                }
-            }
-        }
-
-        if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12) {
-            if (d < 1 || d > 31) {
-                return false;
-            }
-        }
-
-        if (m == 2 || m == 4 || m == 6 || m == 9 || m == 11) {
-            if (d < 1 || d > 30) {
-                return false;
-            }
-        }
-
-        try {
-            FileWriter fw = new FileWriter("try.txt", true);
-            fw.write(personID + "," + firstName + "," + lastName + "," + address + "," + birthdate + "\n");
-            fw.close();
-            return true;
-        } catch (IOException e) {
-            System.out.println("File Error: " + e.getMessage());
-            return false;
-        }
+        return "The test data is valid and successfully written to file.";
     }
-
-    // public int calculateAge(String birthdate) {
-    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    //     LocalDate birthDate = LocalDate.parse(birthdate, formatter);
-    //     LocalDate today = LocalDate.now();
-    //     return Period.between(birthDate, today).getYears();
-    // }
 
     public String updatePersonalDetails(String newPersonID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
         try {
@@ -230,6 +129,82 @@ public class Person {
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Error writing demerit: " + e.getMessage());
+        }
+    }
+    
+    public int calculateAge(LocalDate birthdate) {
+        LocalDate today = LocalDate.now();
+        return Period.between(birthdate, today).getYears();
+    }
+
+    private boolean validatePersonID(String id) {
+        if (personID == null || personID.length() != 10) {
+            System.out.println("Person ID must be exactly 10 characters long.");
+            return false;
+        }
+
+        if (!Character.isDigit(personID.charAt(0)) || !Character.isDigit(personID.charAt(1))) {
+            System.out.println("First two characters of Person ID must be digits between 2 and 9.");
+            return false;
+        }
+
+        if (personID.charAt(0) < '2' || personID.charAt(0) > '9' ||
+            personID.charAt(1) < '2' || personID.charAt(1) > '9') {
+            System.out.println("First two characters of Person ID must be digits between 2 and 9.");
+            return false;
+        }
+
+        int count = 0;
+
+        for (int i = 2; i <= 9; ++i) {
+            if (Character.isDigit(personID.charAt(i)) == false && Character.isLetter(personID.charAt(i)) == false) {
+                count += 1;
+            }
+        }
+
+        if (count < 2) {
+            System.out.println("There should be at least two special characters");
+            return false;
+        }
+
+        if (!Character.isUpperCase(personID.charAt(8)) || !Character.isUpperCase(personID.charAt(9))) {
+            System.out.println("Last two characters of Person ID must be upper case letters.");
+            return false;
+        }
+
+        return true;
+    }
+ 
+    private void validateUniqueID(String id) throws Exception{
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(FILE_PATH));
+            for (String line : lines) {
+                if (line.startsWith(id + "|")) {
+                    throw new Exception("Duplicate ID found: " + id);
+                }
+            }
+        } catch (IOException e) {
+            throw new Exception("Error reading file: " + e.getMessage());
+        }
+    }
+ 
+    private boolean validateAddress(String address) {
+
+        String[] addressInParts = address.split("\\|");
+
+        if (addressInParts.length != 5 || !addressInParts[3].equals("Victoria") || !addressInParts[4].equals("Australia")) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void writeToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
+            writer.write(String.join("|", personID, firstName, lastName, address, DATE_FORMAT.format(birthdate), String.valueOf(isSuspended)));
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Error writing to file: " + e.getMessage());
         }
     }
 }
