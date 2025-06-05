@@ -34,7 +34,7 @@ public class addDemeritPointsTest {
     @Test
     public void testInvalidDateFormat() {
         String result = person.addDemeritPoints("2023-06-01", 3);
-        assertEquals("Invalid date format. Use DD-MM-YYYY.", result);
+        assertEquals("Birthdate must be in DD-MM-YYYY format.", result);
     }
 
     @Test
