@@ -34,23 +34,23 @@ public class addPersonTest {
         Person p7 = new Person("ab%^89y$gT","Ram","Lakhan","3|Lonsdale Street|Melbourne|Victoria|Australia","05-03-2000",false);
  		assertEquals("First two characters of Person ID must be digits.",p7.addPerson());
     }
-
+    
     @Test
-    public void testAddressFailure() {
-        Person p8 = new Person("56@_7!%&BB","Raj","Shah","32|Melbourne|Victoria|Australia","12-09-1990",false);
- 		assertEquals("Address must be in the format: 'number|street|city|state|country'.",p8.addPerson());
-        Person p9 = new Person("56@_7!%&BB","Raj","Shah","12|Parramatta|McKanzie Street|New South Wales|Australia","12-09-1990",false);
- 		assertEquals("State must be 'Victoria'.",p9.addPerson());
-        Person p10 = new Person("58@_7!%&BD", "Priya", "Verma", "22|King Street|Melbourne|Victoria|USA", "11-11-1993", false);
-        assertEquals("Country must be 'Australia'.", p10.addPerson());
+    public void testAddressSuccess() {
+        Person p8 = new Person("369^%!%&CB","Ramesh","Dadhaniya","12|McKanzie Street|Sydney|Victoria|Australia","12-09-1990",false);
+            assertEquals("The test data is valid and successfully written to file.",p8.addPerson());
+        Person p9 = new Person("379^%!%&CB","Ramesh","Patel","54|Ridge Street|Melbourne|Victoria|Australia","12-09-1990",false);
+            assertEquals("The test data is valid and successfully written to file.",p9.addPerson());
     }
 
     @Test
-    public void testAddressSuccess() {
-        Person p11 = new Person("369^%!%&CB","Ramesh","Dadhaniya","12|McKanzie Street|Sydney|Victoria|Australia","12-09-1990",false);
- 		assertEquals("The test data is valid and successfully written to file.",p11.addPerson());
-        Person p12 = new Person("379^%!%&CB","Ramesh","Patel","54|Ridge Street|Melbourne|Victoria|Australia","12-09-1990",false);
- 		assertEquals("The test data is valid and successfully written to file.",p12.addPerson());
+    public void testAddressFailure() {
+        Person p10 = new Person("56@_7!%&BB","Raj","Shah","32|Melbourne|Victoria|Australia","12-09-1990",false);
+ 		assertEquals("Address must be in the format: 'number|street|city|state|country'.",p10.addPerson());
+        Person p11 = new Person("56@_7!%&BB","Raj","Shah","12|Parramatta|McKanzie Street|New South Wales|Australia","12-09-1990",false);
+ 		assertEquals("State must be 'Victoria'.",p11.addPerson());
+        Person p12 = new Person("58@_7!%&BD", "Priya", "Verma", "22|King Street|Melbourne|Victoria|USA", "11-11-1993", false);
+        assertEquals("Country must be 'Australia'.", p12.addPerson());
     }
 
     @Test
