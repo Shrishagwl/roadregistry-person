@@ -35,20 +35,20 @@ public class Person {
 
     public String addPerson() {
 
-        boolean isPersonIDValid = validatePersonID(personID);
-        boolean isAddressValid = validateAddress(address);
+        String isPersonIDValid = validatePersonID(personID);
+        String isAddressValid = validateAddress(address);
         boolean isIDUnique = validateUniqueID(personID);
 
-        if (!isPersonIDValid) {
-            return "Invalid Person ID, it does not fulfill the required conditions.";
+        if (isPersonIDValid != null) {
+            return isPersonIDValid;
         }
 
         if (!isIDUnique) {
             return "Person ID already exists, please use a unique ID.";
         }
 
-        if (!isAddressValid) {
-            return "Invalid Address, it does not fulfill the required conditions.";
+        if (isAddressValid != null) {
+            return isAddressValid;
         }
 
         if (calculateAge(birthdate) <= 0) {
@@ -169,43 +169,37 @@ public class Person {
         return Period.between(birthdate, today).getYears();
     }
 
-    private boolean validatePersonID(String id) {
-        if (personID == null || personID.length() != 10) {
-            System.out.println("Person ID must be exactly 10 characters long.");
-            return false;
+    private String validatePersonID(String id) {
+        if (id == null || id.length() != 10) {
+            return "Person ID must be exactly 10 characters long.";
         }
 
-        if (!Character.isDigit(personID.charAt(0)) || !Character.isDigit(personID.charAt(1))) {
-            System.out.println("First two characters of Person ID must be digits.");
-            return false;
+        if (!Character.isDigit(id.charAt(0)) || !Character.isDigit(id.charAt(1))) {
+            return "First two characters of Person ID must be digits.";
         }
 
-        if (personID.charAt(0) < '2' || personID.charAt(0) > '9' ||
-            personID.charAt(1) < '2' || personID.charAt(1) > '9') {
-            System.out.println("First two characters of Person ID must be digits between 2 and 9.");
-            return false;
+        if (id.charAt(0) < '2' || id.charAt(0) > '9' ||
+            id.charAt(1) < '2' || id.charAt(1) > '9') {
+            return "First two characters of Person ID must be digits between 2 and 9.";
         }
 
         int count = 0;
-
         for (int i = 2; i <= 9; ++i) {
-            if (Character.isDigit(personID.charAt(i)) == false && Character.isLetter(personID.charAt(i)) == false) {
+            if (!Character.isDigit(id.charAt(i)) && !Character.isLetter(id.charAt(i))) {
                 count += 1;
             }
         }
-
         if (count < 2) {
-            System.out.println("There should be at least two special characters.");
-            return false;
+            return "There should be at least two special characters.";
         }
 
-        if (!Character.isUpperCase(personID.charAt(8)) || !Character.isUpperCase(personID.charAt(9))) {
-            System.out.println("Last two characters of Person ID must be upper case letters.");
-            return false;
+        if (!Character.isUpperCase(id.charAt(8)) || !Character.isUpperCase(id.charAt(9))) {
+            return "Last two characters of Person ID must be upper case letters.";
         }
 
-        return true;
+        return null; // null means valid
     }
+
  
     private boolean validateUniqueID(String id){
         try {
@@ -221,16 +215,22 @@ public class Person {
         return true;
     }
 
-    private boolean validateAddress(String address) {
+    private String validateAddress(String address) {
+        String[] parts = address.split("\\|");
 
-        String[] addressInParts = address.split("\\|");
-
-        if (addressInParts.length != 5 || !addressInParts[3].equals("Victoria") || !addressInParts[4].equals("Australia")) {
-            return false;
+        if (parts.length != 5) {
+            return "Address must be in the format: 'number|street|city|state|country'.";
+        }
+        if (!parts[3].equals("Victoria")) {
+            return "State must be 'Victoria'.";
+        }
+        if (!parts[4].equals("Australia")) {
+            return "Country must be 'Australia'.";
         }
 
-        return true;
+        return null; // means no error
     }
+
 
     private void writeToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
