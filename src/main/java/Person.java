@@ -68,14 +68,10 @@ public class Person {
             }
 
             // Under 18s cannot change address
-            if (age < 18 && !newAddress.equals(this.address)) {
-                return "Under 18s cannot change address.";
-            }
+            if (age < 18 && !newAddress.equals(this.address)) return "Under 18s cannot change address.";
 
             // IDs starting with even digit cannot be changed
-            if (Character.getNumericValue(this.personID.charAt(0)) % 2 == 0 && !newPersonID.equals(this.personID)) {
-                return "Cannot change ID if it starts with an even digit.";
-            }
+            if (Character.getNumericValue(this.personID.charAt(0)) % 2 == 0 && !newPersonID.equals(this.personID)) return "Cannot change ID if it starts with an even digit.";
 
             if (!newPersonID.equals(this.personID)) {
                 if (!validateUniqueID(newPersonID)) return "New ID already exists.";
