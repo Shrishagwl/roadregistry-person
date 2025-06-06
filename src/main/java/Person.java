@@ -169,11 +169,11 @@ public class Person {
         if (!Character.isDigit(id.charAt(0)) || !Character.isDigit(id.charAt(1))) return "First two characters of Person ID must be digits.";
         if (id.charAt(0) < '2' || id.charAt(0) > '9' || id.charAt(1) < '2' || id.charAt(1) > '9') return "First two characters of Person ID must be digits between 2 and 9.";
 
-        int specialCount = 0;
+        int count = 0;
         for (int i = 2; i <= 7; ++i) {
-            if (!Character.isLetterOrDigit(id.charAt(i))) specialCount++;
+            if (!Character.isLetterOrDigit(id.charAt(i))) count++;
         }
-        if (specialCount < 2) return "There should be at least two special characters.";
+        if (count < 2) return "There should be at least two special characters between characters 3 and 8.";
 
         if (!Character.isUpperCase(id.charAt(8)) || !Character.isUpperCase(id.charAt(9))) return "Last two characters of Person ID must be uppercase letters.";
 

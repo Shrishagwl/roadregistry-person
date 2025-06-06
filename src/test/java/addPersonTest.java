@@ -26,7 +26,7 @@ public class addPersonTest {
         Person p3 = new Person("09%^89y$SU","Ram","Lakhan","3|Lonsdale Street|Melbourne|Victoria|Australia","05-03-2000",false);
  		assertEquals("First two characters of Person ID must be digits between 2 and 9.",p3.addPerson());
         Person p4 = new Person("27%^89y$gT","Ram","Lakhan","3|Lonsdale Street|Melbourne|Victoria|Australia","05-03-2000",false);
- 		assertEquals("Last two characters of Person ID must be upper case letters.",p4.addPerson());
+ 		assertEquals("Last two characters of Person ID must be uppercase letters.",p4.addPerson());
         Person p5 = new Person("^89y$gT","Ram","Lakhan","3|Lonsdale Street|Melbourne|Victoria|Australia","05-03-2000",false);
  		assertEquals("Person ID must be exactly 10 characters long.",p5.addPerson());
         Person p6 = new Person("28Ti89y$gT","Ram","Lakhan","3|Lonsdale Street|Melbourne|Victoria|Australia","05-03-2000",false);
