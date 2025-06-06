@@ -42,15 +42,26 @@ public class Person {
         String isAddressValid = validateAddress(address);
         boolean isIDUnique = validateUniqueID(personID);
 
-        if (isPersonIDValid != null) return isPersonIDValid;
-        if (!isIDUnique) return "Person ID already exists, please use a unique ID.";
-        if (isAddressValid != null) return isAddressValid;
+        if (isPersonIDValid != null) {
+            return isPersonIDValid;
+        }
+        if (!isIDUnique) {
+            return "Person ID already exists, please use a unique ID.";
+        }
+        if (isAddressValid != null) {
+            return isAddressValid;
+        }
 
         int age = calculateAge(birthdate);
-        if (age <= 0) return "Age needs to be greater than zero!";
-        if (age < 16) return "Age needs to be atleast 16 years for driving a car!";
+        if (age <= 0) {
+            return "Age needs to be greater than zero!";
+        }
+        if (age < 16) {
+            return "Age needs to be atleast 16 years for driving a car!";
+        }
 
         writeToFile();
+        
         return "The test data is valid and successfully written to file.";
     }
 
