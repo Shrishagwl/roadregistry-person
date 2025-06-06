@@ -19,10 +19,7 @@ public class Person {
     private static final String FILE_PATH = "people.txt";
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    // Default constructor
     public Person() {}
-
-    // Parameterized constructor with birthdate parsing
     public Person(String personID, String firstName, String lastName, String address, String birthdate, boolean isSuspended) {
         this.personID = personID;
         this.firstName = firstName;
@@ -42,26 +39,15 @@ public class Person {
         String isAddressValid = validateAddress(address);
         boolean isIDUnique = validateUniqueID(personID);
 
-        if (isPersonIDValid != null) {
-            return isPersonIDValid;
-        }
-        if (!isIDUnique) {
-            return "Person ID already exists, please use a unique ID.";
-        }
-        if (isAddressValid != null) {
-            return isAddressValid;
-        }
+        if (isPersonIDValid != null) return isPersonIDValid;
+        if (!isIDUnique) return "Person ID already exists, please use a unique ID.";
+        if (isAddressValid != null) return isAddressValid;
 
         int age = calculateAge(birthdate);
-        if (age <= 0) {
-            return "Age needs to be greater than zero!";
-        }
-        if (age < 16) {
-            return "Age needs to be atleast 16 years for driving a car!";
-        }
+        if (age <= 0) return "Age needs to be greater than zero!";
+        if (age < 16) return "Age needs to be atleast 16 years for driving a car!";
 
         writeToFile();
-        
         return "The test data is valid and successfully written to file.";
     }
 
@@ -74,9 +60,7 @@ public class Person {
 
             // If birthdate changes, no other fields should change
             if (isBirthdateChanged && (!newPersonID.equals(this.personID) || !newFirstName.equalsIgnoreCase(this.firstName) ||
-                !newLastName.equalsIgnoreCase(this.lastName) || !newAddress.equals(this.address))) {
-                return "If birthdate changes, no other details can be updated.";
-            }
+                !newLastName.equalsIgnoreCase(this.lastName) || !newAddress.equals(this.address))) return "If birthdate changes, no other details can be updated.";
 
             // Under 18s cannot change address
             if (age < 18 && !newAddress.equals(this.address)) return "Under 18s cannot change address.";
