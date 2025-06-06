@@ -30,7 +30,7 @@ public class addPersonTest {
         Person p5 = new Person("^89y$gT","Ram","Lakhan","3|Lonsdale Street|Melbourne|Victoria|Australia","05-03-2000",false);
  		assertEquals("Person ID must be exactly 10 characters long.",p5.addPerson());
         Person p6 = new Person("28Ti89y$gT","Ram","Lakhan","3|Lonsdale Street|Melbourne|Victoria|Australia","05-03-2000",false);
- 		assertEquals("There should be at least two special characters.",p6.addPerson());
+ 		assertEquals("There should be at least two special characters between characters 3 and 8.",p6.addPerson());
         Person p7 = new Person("ab%^89y$gT","Ram","Lakhan","3|Lonsdale Street|Melbourne|Victoria|Australia","05-03-2000",false);
  		assertEquals("First two characters of Person ID must be digits.",p7.addPerson());
     }

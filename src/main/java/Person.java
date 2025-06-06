@@ -190,7 +190,7 @@ public class Person {
             }
         }
         if (count < 2) {
-            return "There should be at least two special characters.";
+            return "There should be at least two special characters between characters 3 and 8.";
         }
 
         if (!Character.isUpperCase(id.charAt(8)) || !Character.isUpperCase(id.charAt(9))) {
